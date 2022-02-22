@@ -2,9 +2,6 @@
     <div>
         <Hero />
         <PopularProducts />
-        <PopularProducts />
-        <PopularProducts />
-        <PopularProducts />
     </div>
 </template>
 
