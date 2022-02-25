@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
-import Categories from "../views/Categories.vue";
+import Category from "../views/Category.vue";
+import Products from "../views/Products.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,9 +12,18 @@ const router = createRouter({
       component: Home,
     },
     {
-      path: "/category",
-      name: "Categories",
-      component: Categories,
+      path: "/category/:category",
+      name: "Category",
+      component: Category,
+    },
+    // {
+    //   path: "/product",
+    //   name: "Product",
+    //   component: Product,
+    // },
+    {
+      path: "/products/:id",
+      component: () => import("@/views/Products.vue"),
     },
     // {
     //   path: "/about",
@@ -24,6 +34,10 @@ const router = createRouter({
     //   component: () => import("../views/AboutView.vue"),
     // },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 };
+  },
 });
 
 export default router;

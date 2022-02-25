@@ -17,7 +17,7 @@
                 </div>
 
                 <div
-                    class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8"
+                    class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-10 lg:gap-x-8"
                 >
                     <div
                         v-for="product in trendingProducts"
@@ -28,18 +28,18 @@
                             class="w-full h-56 rounded-md overflow-hidden group-hover:opacity-75 lg:h-72 xl:h-80"
                         >
                             <img
-                                :src="product.imageSrc"
-                                :alt="product.imageAlt"
+                                :src="product.image"
+                                :alt="product.title"
                                 class="w-full h-full object-center object-cover"
                             />
                         </div>
                         <h3 class="mt-4 text-sm text-gray-700">
-                            <a :href="product.href">
+                            <router-link to="/product">
                                 <span class="absolute inset-0" />
-                                {{ product.name }}
-                            </a>
+                            </router-link>
+                            {{ product.title }}
                         </h3>
-                        <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
+                        <p class="mt-1 text-sm text-gray-500">Natural</p>
                         <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
                     </div>
                 </div>
@@ -83,45 +83,10 @@
     </div>
 </template>
 
-<script>
-const trendingProducts = [
-    {
-        id: 1,
-        name: 'Leather Long Wallet',
-        color: 'Natural',
-        price: '$75',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
-        imageAlt: 'Hand stitched, orange leather long wallet.',
-    },
-    {
-        id: 2,
-        name: 'Leather Long Wallet',
-        color: 'Natural',
-        price: '$75',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
-        imageAlt: 'Hand stitched, orange leather long wallet.',
-    },
-    {
-        id: 3,
-        name: 'Leather Long Wallet',
-        color: 'Natural',
-        price: '$75',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
-        imageAlt: 'Hand stitched, orange leather long wallet.',
-    },
-    {
-        id: 4,
-        name: 'Leather Long Wallet',
-        color: 'Natural',
-        price: '$75',
-        href: '#',
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
-        imageAlt: 'Hand stitched, orange leather long wallet.',
-    },
-]
+<script setup>
+import axios from "axios";
+import { ref } from "vue"
+const trendingProducts = ref([])
 const perks = [
     {
         name: 'Free returns',
@@ -146,13 +111,12 @@ const perks = [
     },
 ]
 
-export default {
-    setup() {
-
-        return {
-            trendingProducts,
-            perks,
-        }
-    },
+const getProducts = () => {
+    axios.get("https://fakestoreapi.com/products?limit=4").then((res) => {
+        console.log(res.data);
+        trendingProducts.value = res.data
+    })
 }
+
+getProducts();
 </script>
