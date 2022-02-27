@@ -1,7 +1,6 @@
 <template>
     <header class="relative overflow-hidden">
         <!-- Top navigation -->
-        <h1 @click="change">{{ $store.state.title }}</h1>
         <nav
             aria-label="Top"
             class="relative z-20 bg-white bg-opacity-90 backdrop-filter backdrop-blur-xl"
@@ -145,7 +144,6 @@ export default {
 
         return {
             open,
-            change,
             navigation
         }
     },

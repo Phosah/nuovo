@@ -148,7 +148,6 @@
             class="max-w-2xl mx-auto pt-12 pb-16 px-4 sm:pt-16 sm:pb-24 sm:px-6 lg:max-w-7xl lg:px-8"
         >
             <h2 id="products-heading" class="sr-only">Products</h2>
-            {{ $route.params.id }}
             <div
                 class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
             >
@@ -186,7 +185,8 @@
 </template>
 
 <script setup>
-import { computed, onActivated, onUpdated, ref } from 'vue'
+import { computed, onMounted, onActivated, onUpdated, ref } from 'vue'
+import { useStore } from 'vuex'
 import {
     Menu,
     MenuButton,
@@ -245,25 +245,24 @@ const filters = [
         ],
     },
 ]
-const products = ref([])
 
 const route = useRoute();
+const store = useStore();
+
+const products = computed(() => {
+    return store.state.products
+})
 
 const categoryName = computed(() => {
     return route.params.category;
 })
 
-const getCategories = () => {
-    console.log("getting categories")
-
-    axios.get("https://fakestoreapi.com/products/category/" + categoryName.value).then((res) => {
-        console.log(res.data);
-        products.value = res.data
-    });
-}
+onMounted(() => {
+    console.log('mounted');
+    store.dispatch("getCategoryProducts", categoryName.value)
+})
 
 const getRating = (rating) => {
     return Math.round(rating)
 };
-getCategories();
 </script>

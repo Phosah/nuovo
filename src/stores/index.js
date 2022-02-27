@@ -5,33 +5,35 @@ const store = createStore({
   state() {
     return {
       navigation: [],
-      title: "Efosa",
+      products: [],
     };
   },
   mutations: {
-    CHANGE_TITLE(state, title) {
-      state.title = title;
-    },
     SET_CATEGORIES(state, navigation) {
       state.navigation = navigation;
+    },
+
+    SET_CATEGORY_PRODUCTS(state, products) {
+      state.products = products;
     },
   },
   actions: {
     getCategories({ commit }) {
       axios.get("https://fakestoreapi.com/products/categories").then((res) => {
         commit("SET_CATEGORIES", res.data);
-        commit("CHANGE_TITLE", "done");
-        console.log(res.data);
       });
+    },
+
+    getCategoryProducts({ commit }, name) {
+      console.log(name);
+      axios
+        .get("https://fakestoreapi.com/products/category/" + name)
+        .then((res) => {
+          console.log(res.data);
+          commit("SET_CATEGORY_PRODUCTS", res.data);
+        });
     },
   },
 });
 
 export default store;
-
-// const getCategories = () => {
-//   axios.get("https://fakestoreapi.com/products/categories").then((res) => {
-//     console.log(res.data);
-//     navigation.value = res.data;
-//   });
-// };
