@@ -1,5 +1,6 @@
 <template>
-    <main>
+    <h1 class="text=center" v-if="$store.state.loading">I am LOADING</h1>
+    <main v-else>
         <div class="bg-white">
             <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">{{ categoryName }}</h1>
@@ -187,6 +188,7 @@
 <script setup>
 import { computed, onMounted, onActivated, onUpdated, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router';
 import {
     Menu,
     MenuButton,
@@ -199,8 +201,6 @@ import {
 } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/solid'
 import { StarIcon } from '@heroicons/vue/solid'
-import axios from 'axios'
-import { useRoute } from 'vue-router';
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Best Rating', href: '#', current: false },
@@ -258,7 +258,6 @@ const categoryName = computed(() => {
 })
 
 onMounted(() => {
-    console.log('mounted');
     store.dispatch("getCategoryProducts", categoryName.value)
 })
 

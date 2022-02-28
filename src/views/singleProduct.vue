@@ -1,5 +1,6 @@
 <template>
-    <main class="max-w-7xl mx-auto sm:pt-16 sm:px-6 lg:px-8">
+    <div v-if="$store.state.loading">I AM LOADING.....</div>
+    <main v-else class="max-w-7xl mx-auto sm:pt-16 sm:px-6 lg:px-8">
         <div class="max-w-2xl mx-auto lg:max-w-none">
             <!-- Product -->
             <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
@@ -168,9 +169,9 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
-import axios from "axios"
+import { useStore } from 'vuex'
 import {
     Disclosure,
     DisclosureButton,
@@ -190,9 +191,6 @@ import {
     PlusSmIcon,
 } from '@heroicons/vue/outline'
 import { StarIcon } from '@heroicons/vue/solid'
-
-const product = ref({})
-const relatedProducts = ref([])
 
 export default {
     components: {
@@ -214,30 +212,19 @@ export default {
     },
     setup() {
         const open = ref(false)
-
         const route = useRoute()
-        // get product id
+        const store = useStore()
         const productId = computed(() => {
             return route.params.id
-        })
-        console.log(productId.value)
-        const getProduct = () => {
-            axios.get("https://fakestoreapi.com/products/" + productId.value)
-                .then((res) => {
-                    product.value = res.data
+        });
 
-                    getCategory(product.value.category)
-                })
-        }
+        const product = computed(() => {
+            return store.state.singleProduct
+        });
 
-        const getCategory = (categoryName) => {
-            console.log(categoryName)
-
-            axios.get("https://fakestoreapi.com/products/category/" + categoryName).then((res) => {
-                relatedProducts.value = res.data
-                console.log(relatedProducts)
-            })
-        }
+        const relatedProducts = computed(() => {
+            return store.state.products
+        });
 
         const totalRatings = 5
         const getRating = computed(() => {
@@ -256,20 +243,18 @@ export default {
             }
         }
 
+        onMounted(() => {
+            store.dispatch("getSingleProduct", productId.value)
+        })
+
         return {
             product,
             relatedProducts,
             open,
-            getProduct,
             getRating,
             totalRatings,
             showColor,
-
         }
     },
-
-    created() {
-        this.getProduct()
-    }
 }
 </script>

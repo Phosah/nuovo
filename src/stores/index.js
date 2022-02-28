@@ -6,6 +6,8 @@ const store = createStore({
     return {
       navigation: [],
       products: [],
+      singleProduct: {},
+      loading: false,
     };
   },
   mutations: {
@@ -16,6 +18,17 @@ const store = createStore({
     SET_CATEGORY_PRODUCTS(state, products) {
       state.products = products;
     },
+
+    SET_SINGLE_PRODUCT(state, singleProduct) {
+      state.singleProduct = singleProduct;
+    },
+
+    START_LOADING(state) {
+      state.loading = true;
+    },
+    STOP_LOADING(state) {
+      state.loading = false;
+    },
   },
   actions: {
     getCategories({ commit }) {
@@ -25,13 +38,27 @@ const store = createStore({
     },
 
     getCategoryProducts({ commit }, name) {
-      console.log(name);
+      commit("START_LOADING");
+
       axios
         .get("https://fakestoreapi.com/products/category/" + name)
         .then((res) => {
-          console.log(res.data);
           commit("SET_CATEGORY_PRODUCTS", res.data);
+
+          commit("STOP_LOADING");
         });
+    },
+
+    getSingleProduct({ commit, dispatch }, id) {
+      commit("START_LOADING");
+      console.log(id);
+      axios.get("https://fakestoreapi.com/products/" + id).then((res) => {
+        commit("SET_SINGLE_PRODUCT", res.data);
+
+        dispatch("getCategoryProducts", res.data.category);
+
+        commit("STOP_LOADING");
+      });
     },
   },
 });
