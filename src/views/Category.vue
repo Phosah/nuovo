@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text=center" v-if="$store.state.loading">I am LOADING</h1>
+    <div v-if="$store.state.loading" class="h-screen w-full text-center text-3xl">LOADING.....</div>
     <main v-else>
         <div class="bg-white">
             <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
