@@ -78,7 +78,7 @@
                                 />
                                 <span
                                     class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"
-                                >0</span>
+                                >{{ $store.state.cart.length }}</span>
                                 <span class="sr-only">items in cart, view bag</span>
                             </router-link>
                         </div>

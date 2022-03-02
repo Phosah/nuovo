@@ -4,7 +4,7 @@
       <Navbar />
     </header>
     <main class="flex-1">
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </main>
     <footer>
       <Footer />

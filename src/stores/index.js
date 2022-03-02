@@ -8,8 +8,23 @@ const store = createStore({
       products: [],
       singleProduct: {},
       loading: false,
+      cart: [],
+      favorites: [],
     };
   },
+
+  getters: {
+    totalCartPrice(state) {
+      let total = 0;
+
+      state.cart.forEach((product) => {
+        total += product.price;
+      });
+
+      return total;
+    },
+  },
+
   mutations: {
     SET_CATEGORIES(state, navigation) {
       state.navigation = navigation;
@@ -29,7 +44,21 @@ const store = createStore({
     STOP_LOADING(state) {
       state.loading = false;
     },
+
+    ADD_TO_CART(state, product) {
+      state.cart.push(product);
+    },
+
+    TOGGLE_FAVORITES(state, product) {
+      if (state.favorites.includes(product.id)) {
+        const ix = state.favorites.indexOf(product.id);
+        state.favorites.splice(ix, 1);
+      } else {
+        state.favorites.push(product.id);
+      }
+    },
   },
+
   actions: {
     getCategories({ commit }) {
       axios.get("https://fakestoreapi.com/products/categories").then((res) => {
@@ -60,6 +89,12 @@ const store = createStore({
         commit("STOP_LOADING");
       });
     },
+
+    // addToCart({ commit }, product) {
+    //   console.log("This works");
+    //   console.log(product);
+    //   commit("ADD_TO_CART", product);
+    // },
   },
 });
 

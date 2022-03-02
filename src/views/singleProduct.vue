@@ -1,5 +1,23 @@
 <template>
-    <div v-if="$store.state.loading" class="h-screen w-full text-center text-3xl">LOADING.....</div>
+    <div
+        v-if="$store.state.loading"
+        class="flex items-center justify-center h-screen w-full text-center text-3xl"
+    >
+        <div class="animate-spin">
+            <svg
+                class="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    fill-rule="evenodd"
+                    d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                    clip-rule="evenodd"
+                />
+            </svg>
+        </div>
+    </div>
     <main v-else class="max-w-7xl mx-auto sm:pt-16 sm:px-6 lg:px-8">
         <div class="max-w-2xl mx-auto lg:max-w-none">
             <!-- Product -->
@@ -55,13 +73,16 @@
 
                         <div class="mt-10 flex sm:flex-col1">
                             <button
-                                type="submit"
+                                @click="addToBag(product)"
+                                type="button"
                                 class="max-w-xs flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
                             >Add to bag</button>
 
                             <button
+                                @click="$store.commit('TOGGLE_FAVORITES', product)"
                                 type="button"
-                                class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                                :class="favColor(product)"
+                                class="ml-4 py-3 px-3 rounded-md flex items-center justify-center hover:bg-gray-100 hover:text-gray-500"
                             >
                                 <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
                                 <span class="sr-only">Add to favorites</span>
@@ -222,6 +243,10 @@ export default {
             return store.state.singleProduct
         });
 
+        const favorites = computed(() => {
+            return store.state.favorites
+        });
+
         const relatedProducts = computed(() => {
             return store.state.products
         });
@@ -243,17 +268,33 @@ export default {
             }
         }
 
+        const favColor = (p) => {
+            if (favorites.value.includes(p.id)) {
+                console.log("Color added successfully");
+                return '!bg-purple-700 !text-white'
+            } else {
+                return 'text-gray-400'
+            }
+        }
+
+        const addToBag = (p) => {
+            store.commit("ADD_TO_CART", p)
+        }
+
         onMounted(() => {
             store.dispatch("getSingleProduct", productId.value)
         })
 
         return {
             product,
+            favorites,
             relatedProducts,
             open,
             getRating,
             totalRatings,
             showColor,
+            addToBag,
+            favColor
         }
     },
 }

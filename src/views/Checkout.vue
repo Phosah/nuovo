@@ -354,11 +354,11 @@
                                 :key="product.id"
                                 class="flex py-6 px-4 sm:px-6"
                             >
-                                <div class="flex-shrink-0">
+                                <div class="flex-shrink-0 h-24 w-20 relative">
                                     <img
-                                        :src="product.imageSrc"
+                                        :src="product.image"
                                         :alt="product.imageAlt"
-                                        class="w-20 rounded-md"
+                                        class="w-full h-full absolute object-contain inset-0 rounded-md"
                                     />
                                 </div>
 
@@ -431,7 +431,9 @@
                                 class="flex items-center justify-between border-t border-gray-200 pt-6"
                             >
                                 <dt class="text-base font-medium">Total</dt>
-                                <dd class="text-base font-medium text-gray-900">$75.52</dd>
+                                <dd
+                                    class="text-base font-medium text-gray-900"
+                                >$ {{ $store.getters.totalCartPrice }}</dd>
                             </div>
                         </dl>
 
@@ -449,7 +451,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
     RadioGroup,
     RadioGroupDescription,
@@ -457,6 +459,7 @@ import {
     RadioGroupOption,
 } from '@headlessui/vue'
 import { CheckCircleIcon, TrashIcon } from '@heroicons/vue/solid'
+import store from '../stores'
 
 const deliveryMethods = [
     { id: 1, title: 'Standard', turnaround: '4–10 business days', price: '$5.00' },
@@ -480,19 +483,11 @@ export default {
     setup() {
         const open = ref(false)
         const selectedDeliveryMethod = ref(deliveryMethods[0])
-        const products = [
-            {
-                id: 1,
-                title: 'Basic Tee',
-                href: '#',
-                price: '$32.00',
-                color: 'Black',
-                size: 'Large',
-                imageSrc: 'https://tailwindui.com/img/ecommerce-images/checkout-page-02-product-01.jpg',
-                imageAlt: "Front of men's Basic Tee in black.",
-            },
-            // More products...
-        ]
+        // const products = ref([])
+
+        const products = computed(() => {
+            return store.state.cart
+        })
         return {
             products,
             deliveryMethods,
